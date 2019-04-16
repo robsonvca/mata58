@@ -1,0 +1,96 @@
+## REQUISITOS ESSENCIAIS
+
+myshell>
+
+**Lista de comandos**
+
+"start": inicia outro programa com argumentos de linha de comando, imprimirá o ID do
+	processo do programa que está rodando, e aceitará outra entrada de linha de comando.
+	e.g:
+		myshell> start emacs myfile.c
+		myshell: processo 357 iniciado.
+		myshell>
+
+	
+"wait": não recebe argumentos e faz com que o shell aguarde até que o processo finalize.
+	Quando isso acontece, indica se o término foi normal ou não, e inclui o código
+	de status de término (exit code) ou o número e nome do sinal, respectivamente.
+	Se não existir processos para o shell aguardar, imprime uma mensagem e volta a aceitar
+	novos comandos de entrada.
+	e.g:
+		myshell> wait
+		myshell: processo 346 finalizou normalmente com status 0.
+		myshell> wait
+		myshell: processo 347 finalizou de forma anormal com sinal 11: Segmentation fault.
+		myshell> wait
+		myshell: não há processos restantes.
+
+"run": combina o comportamento de "start" e "wait".
+	Inicia um programa, possivelmente com argumentos de linha de 		comando, e espera que tal processo finalize e imprima o status 		de término.
+	e.g:
+		myshell> run date
+		Mon Mar 19 10:52:36 EST 2019
+		myshell: processo 348 finalizou normalmente com status 0.
+		myshell>
+
+"kill": recebe como ID do processo e envia sinal de SIGKILL para  		processo indicado. Quando um proceso "matado"(killed), um "wait" 	é acionado para que seja coletado seu status de término.
+	e.g:
+	myshell> kill 349
+	myshell> processo 349 foi finalizado.
+	
+	myshell> wait
+	myshell> processo 349 finalizou de forma anormal com sinal 9: 		killed.
+	
+"stop": recebe como ID do processo e envia sinal de SIGSTOP para  		processo indicado.
+	e.g:
+	myshell> stop 350
+	myshell> processo 350 parou a execução.
+	
+"continue": recebe como ID do processo e envia sinal de SIGCONT para  processo indicado.
+	e.g:
+	myshell> continue 350
+	myshell> processo 350 voltou a execução.
+	
+	
+"quit" ou "exit": finaliza o programa (myshell)
+
+
+**Observações**
+- após a conclusão de cada comando, o programa deve continuar imprimindo um prompt e a ceitando novas entradas de linha de comando.
+- o programa finaliza e retorna status zero com "quit", "exit" ou  uando alcançar um end-of-file;
+- o programa aceita entradas de linha de comando de 4096 caracteres, e manipula até 100 palavras em cada linha de comando;
+- se usuário digitar linha em branco(i.e, teclar [enter]), simplesmente continuará exibindo o prompt aceitando novos comandos;
+- se usuáio digitar um comando não identificado, imprime uma mensagem de erro legível. e.g:
+	myshell> blabla is -la
+	myshell> comando desconhecido: blabla
+
+## DICAS TÉCNICAS
+
+Pesquisa rápida no "man pages" sobre as call systems: (descrever brevemente aqui)
+- fork: cria um novo processo. Retorna 0 se dentro do processo filho; valor do processo, se dentro do processo pai; negativo em caso de erro;
+- execvp: cria um processo novo, que é o programa que vai executar. "Mata o processo pai, e o filho pega sua PID"; Retorna -1 em caso de erro;
+- wait: 
+- waitpid:
+- kill:
+- exit:
+- printf:
+- fgets:
+- strtok:
+- strcmp:
+- strsignal:
+- atoi:
+
+Usar fork e execvp para implementar o comando "start"; wait para implementar o comando "wait"; waitpid para implementar o comando "run"; e kill para implementar "kill", "stop" e "continue".
+
+Pesquisar em "man 7 signal" para obter lista de sinais e suas descrições.
+
+
+Certifique-se de parar quando fgets retornar null, indicando end-of-
+file. Isto permite rodar myshell e ler comandos de um arquivo. Por exemplo, crie um arquivo myscript com os seguintes comandos:
+	start ls
+	wait
+	start date
+	wait
+
+Então, execute o arquivo como entrada, usando:
+	./myshell < myscript
