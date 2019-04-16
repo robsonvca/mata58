@@ -169,7 +169,8 @@ int main(int argc, char *argv[]){
     
     /* Algoritmo de cópia */
     while(bytesLeft > 0){
-        /* */
+        
+        /* Atualiza bytesLeft, qntBlocks e sizeBlocks de acordo com o cálculo de blocos */
         bytesLeft = calcBlocks(bytesLeft, &qntBlocks, &sizeBlock);
         
         /* Buffer de tamanho que pode variar a cada iteração. Parâmetro de read()/write()*/
