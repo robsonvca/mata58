@@ -8,14 +8,14 @@
 #include <sys/stat.h>
 
 
+/* Tempo em segundo(s) de parâmetro para função alarm() */
+#define TIME_ALARM 1
+
 /* Tamanho máximo do bloco(em Bytes) à ser lido e escrito
  * por read() e write() no parâmetro "count" */
 #define MAX_SZ_BLOCK 5000
 
-/* Tempo em segundo(s) de parâmetro para função alarm() */
-#define TIME_ALARM 1
-
-/* Enviar SIGALRM a cada "TIME_ALARM" segundo(s),
+/* Envia SIGALRM a cada "TIME_ALARM" segundo(s),
  * imprimindo mensagem de status a cada chamada
  * Complexidade Θ(1) */
 void alarmStatus(){
@@ -52,13 +52,13 @@ int creatFile(char *fileName, mode_t mode){
 /* Captura o tamanho do arquivo de nome "*filename"
  * Retorna o tamanho do arquivo ou -1 caso erro.
  * Complexidade Θ(1) */
-long int lengthFile(char *filename){
+long int lengthFile(char *fileName){
     /* Usa função stat() para capturar as informações do
      * arquivo de nome *filename*/
      
     struct stat fileStat; // Estrutura onde os dados do arquivo serão armazenados
  
-    stat(filename, &fileStat);
+    stat(fileName, &fileStat);
 
     return (long int)fileStat.st_size; // st_size armazena tamanho do arquivo
 }
